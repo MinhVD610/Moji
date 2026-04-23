@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { User } from "../models/User.js";
+import User  from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { Session } from "../models/Session.js";
@@ -117,3 +117,22 @@ try {
     return res.status(500).json({message: "Đã xảy ra lỗi khi đăng nhập"});  
 }
 };
+
+export const signOut = async (req, res) => {
+    try {
+        // lấy refreshToken từ cookie
+        const token = req.cookies.refreshToken;
+        if(!token) {
+        // xoa refreshToken trong database
+         await Session.deleteOne({refreshToken: token});
+        // xoa cookie refreshToken
+         res.clearCookie("refreshToken");
+        // trả về response
+         return res.sendStatus(204); // 204 No Content, không trả về dữ liệu gì, chỉ thông báo thành công
+        }
+
+    } catch (error) {
+        console.error("Error occurred while signing out:", error);
+        return res.status(500).json({message: "Đã xảy ra lỗi khi đăng xuất"});
+    }   
+}

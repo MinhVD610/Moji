@@ -2,6 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { connectDB } from './libs/db.js';
 import authRoute from './routes/authRoute.js';
+import userRoute from './routes/userRoute.js';
+import cookieParser from 'cookie-parser';
+import { protectedRoute } from './middlewares/authMiddleware.js';
 
 dotenv.config();
 
@@ -16,9 +19,12 @@ app.use(express.json());
 
 // public routes
 app.use('/api/auth', authRoute);
+app.use(cookieParser());
 
 
 // private routes
+app.use(protectedRoute); // áp dụng middleware bảo vệ cho tất cả các route sau nó, đảm bảo rằng chỉ những request có token hợp lệ mới có thể truy cập được các route này
+app.use('/api/user', userRoute);
 
 connectDB()
   .then(() => {

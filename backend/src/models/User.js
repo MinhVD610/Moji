@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true,
     trim: true,
     lowercase: true,
   },
@@ -41,4 +42,5 @@ const userSchema = new mongoose.Schema({
   timestamps: true, // tự động thêm createdAt và updatedAt
 });
 
-export const User = mongoose.model("User", userSchema);
+ const User = mongoose.model("User", userSchema);
+ export default User;
