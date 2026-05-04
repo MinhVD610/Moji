@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {z} from "zod";
 import { Input } from "@/components/ui/input"
-import { Label } from "./ui/label"
+import { Label } from "../ui/label"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 
@@ -58,7 +58,7 @@ export function SignupForm({
               <div className="flex flex-col items-center text-center gap-2">
                 <a href="/" className="mx-auto block w-fit text-center">
                   <img
-                    src="/logo.svg"
+                    src="/favicon.svg"
                     alt="Logo"
                   />
                 </a>
@@ -66,7 +66,7 @@ export function SignupForm({
                   Create an account
                 </h1>
                 <p className="text-muted-foreground text-balance">
-                  Enter your email below to create your account
+                  Welcome! Enter your email below to create your account.
                 </p>
                 </div>
 
@@ -172,16 +172,17 @@ export function SignupForm({
                 Create Account
               </Button>
 
-              <div className="text-center text-sm "></div>
+              <div className="text-center text-sm ">
                 Already have an account? {" "}
                 <a href="/signin" className="underline underline-offset-4">
                   Login
                 </a>
+              </div>
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
             <img
-              src="/placeholderSignup.png"
+              src="/placeholderSignUp.png"
               alt="Image"
               className="absolute top-1/2 -translate-y-1/2 object-cover "
             />
