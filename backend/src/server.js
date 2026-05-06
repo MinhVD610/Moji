@@ -5,6 +5,7 @@ import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js';
 import cookieParser from 'cookie-parser';
 import { protectedRoute } from './middlewares/authMiddleware.js';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -16,15 +17,19 @@ const PORT = process.env.PORT || 5001;
 // đồng thời cũng giúp xử lý các lỗi liên quan đến JSON nếu có.
 // Giúp cho việc xây dựng API trở nên dễ dàng hơn khi làm việc với dữ liệu JSON.
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: process.env.CLIENT_URL, // Chỉ cho phép frontend của bạn truy cập API
+  credentials: true, // Cho phép gửi cookie trong các yêu cầu từ frontend
+})); 
 
 // public routes
 app.use('/api/auth', authRoute);
-app.use(cookieParser());
 
 
 // private routes
 app.use(protectedRoute); // áp dụng middleware bảo vệ cho tất cả các route sau nó, đảm bảo rằng chỉ những request có token hợp lệ mới có thể truy cập được các route này
-app.use('/api/user', userRoute);
+app.use('/api/users', userRoute);
 
 connectDB()
   .then(() => {

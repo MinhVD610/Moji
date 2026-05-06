@@ -10,4 +10,8 @@ export const authMe = async (req, res) => {
         console.error('Loi khi goi API authMe:', error);
         return res.status(500).json({ message: 'Loi server' });
     }
-}
+};
+
+export const test = (req, res) => {
+    return res.sendStatus(204);
+};

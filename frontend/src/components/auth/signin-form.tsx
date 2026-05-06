@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "../ui/label"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 const signInSchema = z.object({
     username: z.string().min(3, "Username must be at least 3 characters long").max(100),
@@ -17,30 +19,18 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 export function SignInForm({
   className,
   ...props  }: React.ComponentProps<"div">) {
+    const { signIn } = useAuthStore();
+    const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema)
   });   
 
     const onSubmit = async (data: SignInFormValues) => {
-        try {
-            // Call your API to authenticate the user
-            const response = await fetch("/api/signin", {       
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
+        const { username, password } = data;
+        await signIn(username, password);
+        navigate("/");
 
-            if (!response.ok) {
-                throw new Error("Failed to sign in");
-            }
 
-            // Handle successful sign-in (e.g., redirect to dashboard)
-            console.log("Signed in successfully");
-        } catch (error) {
-            console.error("Error signing in:", error);
-        }
     };
 
   return (

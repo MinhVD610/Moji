@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "../ui/label"
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import { authService } from "@/services/authService";
+import { useAuthStore } from "@/stores/useAuthStore";
+import type { ComponentProps } from "react";
+import { useNavigate } from "react-router";
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required").max(100),
@@ -21,27 +25,20 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema)
   });
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
-      // Call your API to create a new user
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+      // Gọi API để đăng ký tài khoản
+      const {firstName, lastName, username, email, password} = data;
+      // gọi backend về để signup
+      await authService.signUp(username, password, email, firstName, lastName);
 
-      if (!response.ok) {
-        throw new Error("Failed to create account");
-      }
-
-      // Handle successful signup (e.g., redirect to login page)
-      console.log("Account created successfully");
+      navigate("/signin");
     } catch (error) {
       console.error("Error creating account:", error);
     }
